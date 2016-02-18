@@ -1,4 +1,4 @@
-package com.stefandekanski.tictactoe;
+package com.stefandekanski.tictactoe.game;
 
 import com.stefandekanski.tictactoe.field.AdjacentField;
 import com.stefandekanski.tictactoe.field.Direction;
@@ -8,6 +8,11 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class Board {
+    public static class IllegalMove extends Exception {
+        public IllegalMove(String message) {
+            super(message);
+        }
+    }
 
     public final int N;
     private final Field[] board;
@@ -32,9 +37,9 @@ public class Board {
         return board[fieldIndex(x, y)] != null;
     }
 
-    public Field openField(int x, int y, Player player) {
+    public Field openField(int x, int y, Player player) throws IllegalMove {
         if (isFieldOpen(x, y)) {
-            throw new IllegalStateException("Can't open already open field!");
+            throw new IllegalMove("Can't open already open field!");
         }
         Field field = new Field(x, y, player);
         board[fieldIndex(x, y)] = field;

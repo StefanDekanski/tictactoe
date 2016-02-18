@@ -1,12 +1,17 @@
-package com.stefandekanski.tictactoe;
+package com.stefandekanski.tictactoe.game;
 
 public class Player {
+    public static class IllegalNameException extends Exception {
+        public IllegalNameException(String msg) {
+            super(msg);
+        }
+    }
 
     private final String name;
 
-    public Player(String letter) {
+    public Player(String letter) throws IllegalNameException {
         if (letter == null || letter.length() != 1) {
-            throw new IllegalStateException("Only single letter name allowed!");
+            throw new IllegalNameException("Only single letter name allowed!");
         }
         name = letter.toUpperCase();
     }

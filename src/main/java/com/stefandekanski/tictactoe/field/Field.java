@@ -1,6 +1,6 @@
 package com.stefandekanski.tictactoe.field;
 
-import com.stefandekanski.tictactoe.Player;
+import com.stefandekanski.tictactoe.game.Player;
 
 public class Field {
 

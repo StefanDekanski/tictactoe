@@ -1,4 +1,4 @@
-package com.stefandekanski.tictactoe;
+package com.stefandekanski.tictactoe.game;
 
 import com.stefandekanski.tictactoe.field.AdjacentField;
 import com.stefandekanski.tictactoe.field.Field;
@@ -12,6 +12,7 @@ public class Game {
             super(reason);
         }
     }
+
     private final int winningScore;
     private final Board board;
     private final Player[] players;
@@ -35,9 +36,9 @@ public class Game {
         }
     }
 
-    public Player nextPlayer() throws GameTerminatedException {
+    public Player nextPlayer() {
         if (!board.hasFieldsLeft()) {
-            throw new GameTerminatedException("No more fields left, it's a draw");
+            throw new IllegalStateException("No more fields left");
         }
         if (++currIndex == players.length) {
             currIndex = 0;
@@ -45,7 +46,7 @@ public class Game {
         return players[currIndex];
     }
 
-    public boolean playerMove(int x, int y, Player player) {
+    public boolean playerMove(int x, int y, Player player) throws Board.IllegalMove {
         Field move = board.openField(x, y, player);
         List<AdjacentField> adjacentFields = board.getAdjacentFieldsOf(move);
         for (AdjacentField field : adjacentFields) {
@@ -55,10 +56,15 @@ public class Game {
                 return true;
             }
         }
-        return false;
+        return !board.hasFieldsLeft();
     }
 
     public Player getWinner() {
         return winner;
+    }
+
+    public Board gameBoard() {
+        //should be copied or made unmodifiable, but well... later
+        return board;
     }
 }

@@ -1,6 +1,6 @@
 package com.stefandekanski.tictactoe.field;
 
-import com.stefandekanski.tictactoe.Player;
+import com.stefandekanski.tictactoe.game.Player;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -11,12 +11,15 @@ import static org.hamcrest.core.IsNot.not;
 
 public class FieldTest {
 
-    public static final Player PLAYER_ONE = new Player("X");
-    public static final Player PLAYER_TWO = new Player("O");
+    Player PLAYER_ONE;
+    Player PLAYER_TWO;
+
     Field field;
 
     @Before
-    public void setUp() {
+    public void setUp() throws Player.IllegalNameException {
+        PLAYER_ONE = new Player("X");
+        PLAYER_TWO = new Player("O");
         field = new Field(3, 3, PLAYER_ONE);
     }
 
