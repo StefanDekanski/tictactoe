@@ -1,12 +1,6 @@
 package com.stefandekanski.tictactoe;
 
 public class Field {
-    public enum Direction {
-        HORIZONTAL,
-        VERTICAL,
-        BACKSLASH_DIAGONAL,
-        OTHER_DIAGONAL
-    }
 
     private static final int ONE = 1;
 
@@ -20,12 +14,11 @@ public class Field {
     private int backslashSize = 1;
     private int otherDiagonalSize = 1;
 
-    private final String playerOwner;
+    public final String playerOwner;
     public final int x;
     public final int y;
 
-
-    public Field(String playerOwner, int x, int y) {
+    public Field(int x, int y, String playerOwner) {
         this.x = x;
         this.y = y;
         this.playerOwner = playerOwner;
@@ -74,7 +67,7 @@ public class Field {
     public boolean tryUnion(Field other, Direction direction) {
         checkUnionPreconditions(other, direction);
 
-        Field myDirectionParent =  findDirectionParent(direction);
+        Field myDirectionParent = findDirectionParent(direction);
         Field otherDirectionParent = other.findDirectionParent(direction);
         if (myDirectionParent.equals(otherDirectionParent)) return false;
 
