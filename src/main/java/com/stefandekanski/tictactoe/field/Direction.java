@@ -1,4 +1,4 @@
-package com.stefandekanski.tictactoe;
+package com.stefandekanski.tictactoe.field;
 
 public enum Direction {
     HORIZONTAL,

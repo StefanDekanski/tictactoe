@@ -1,8 +1,10 @@
-package com.stefandekanski.tictactoe;
+package com.stefandekanski.tictactoe.field;
+
+import com.stefandekanski.tictactoe.Player;
 
 public class Field {
 
-    private static final int ONE = 1;
+    public static final int ONE = 1;
 
     private Field horizontalParent;
     private Field verticalParent;
@@ -14,11 +16,11 @@ public class Field {
     private int backslashSize = 1;
     private int otherDiagonalSize = 1;
 
-    public final String playerOwner;
+    public final Player playerOwner;
     public final int x;
     public final int y;
 
-    public Field(int x, int y, String playerOwner) {
+    public Field(int x, int y, Player playerOwner) {
         this.x = x;
         this.y = y;
         this.playerOwner = playerOwner;
@@ -26,38 +28,6 @@ public class Field {
         verticalParent = this;
         backslashParent = this;
         otherDiagonalParent = this;
-    }
-
-    public boolean isHorizontalParent() {
-        return equals(horizontalParent);
-    }
-
-    public boolean isVerticalParent() {
-        return equals(verticalParent);
-    }
-
-    public boolean getBackslashParent() {
-        return equals(backslashParent);
-    }
-
-    public boolean isOtherDiagonalParent() {
-        return equals(otherDiagonalParent);
-    }
-
-    public boolean isFieldHorizontalAdjacent(Field other) {
-        return isOwnerTheSame(other) && y == other.y && ((x + ONE) == other.x || (x - ONE) == other.x);
-    }
-
-    public boolean isFieldVerticalAdjacent(Field other) {
-        return isOwnerTheSame(other) && x == other.x && ((y + ONE) == other.y || (y - ONE) == other.y);
-    }
-
-    public boolean isFieldBackSlashAdjacent(Field other) {
-        return isOwnerTheSame(other) && ((x - ONE) == other.x && y + ONE == other.y) || ((x + ONE) == other.x && (y - ONE) == other.y);
-    }
-
-    public boolean isFieldOtherDiagonalAdjacent(Field other) {
-        return isOwnerTheSame(other) && (((x + ONE) == other.x && y + ONE == other.y) || (((x - ONE) == other.x) && (y - ONE == other.y)));
     }
 
     public boolean isOwnerTheSame(Field other) {
@@ -92,11 +62,43 @@ public class Field {
         return false;
     }
 
-    public int getParentDirectionSize(Direction direction) {
+    boolean isHorizontalParent() {
+        return equals(horizontalParent);
+    }
+
+    boolean isVerticalParent() {
+        return equals(verticalParent);
+    }
+
+    boolean getBackslashParent() {
+        return equals(backslashParent);
+    }
+
+    boolean isOtherDiagonalParent() {
+        return equals(otherDiagonalParent);
+    }
+
+    boolean isFieldHorizontalAdjacent(Field other) {
+        return isOwnerTheSame(other) && (y == other.y && ((x + ONE) == other.x || (x - ONE) == other.x));
+    }
+
+    boolean isFieldVerticalAdjacent(Field other) {
+        return isOwnerTheSame(other) && (x == other.x && ((y + ONE) == other.y || (y - ONE) == other.y));
+    }
+
+    boolean isFieldBackSlashAdjacent(Field other) {
+        return isOwnerTheSame(other) && (((x - ONE) == other.x && y - ONE == other.y) || ((x + ONE) == other.x && (y + ONE) == other.y));
+    }
+
+    boolean isFieldOtherDiagonalAdjacent(Field other) {
+        return isOwnerTheSame(other) && ((x + ONE == other.x && y - ONE == other.y) || (((x - ONE) == other.x) && (y + ONE == other.y)));
+    }
+
+    int getParentDirectionSize(Direction direction) {
         return findDirectionParent(direction).getDirectionSize(direction);
     }
 
-    public Field findDirectionParent(Direction direction) {
+    Field findDirectionParent(Direction direction) {
         switch (direction) {
             case HORIZONTAL:
                 return findHorizontalParent();
@@ -110,7 +112,6 @@ public class Field {
                 throw new IllegalStateException("Missing case");
         }
     }
-
 
     private Field findHorizontalParent() {
         Field current = this;
