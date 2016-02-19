@@ -3,8 +3,8 @@ package com.stefandekanski.tictactoe.runner;
 
 import com.stefandekanski.tictactoe.game.Board;
 import com.stefandekanski.tictactoe.game.Game;
+import com.stefandekanski.tictactoe.game.Move;
 import com.stefandekanski.tictactoe.game.Player;
-import com.stefandekanski.tictactoe.move.Move;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -83,7 +83,7 @@ public class GameRunnerTest {
         }
 
         @Override
-        public Move getPlayerMove(Player player) {
+        public Move getPlayerMove(Player player, boolean silent) {
             return simulatedMoves.next();
         }
 

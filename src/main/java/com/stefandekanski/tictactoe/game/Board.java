@@ -3,6 +3,7 @@ package com.stefandekanski.tictactoe.game;
 import com.stefandekanski.tictactoe.field.AdjacentField;
 import com.stefandekanski.tictactoe.field.Direction;
 import com.stefandekanski.tictactoe.field.Field;
+import com.stefandekanski.tictactoe.util.Util;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -32,20 +33,6 @@ public class Board {
         return fieldsLeft > 0;
     }
 
-    /*
-      From left to right, from top to bottom
-     */
-    public List<Player> getFieldOwnerList() {
-        ArrayList<Player> fieldOwners = new ArrayList<>(board.length);
-        for (Field f : board) {
-            if (f == null) {
-                fieldOwners.add(Player.NULL_PLAYER);
-            } else {
-                fieldOwners.add(f.playerOwner);
-            }
-        }
-        return fieldOwners;
-    }
 
     Field getField(int x, int y) {
         validRowAndColumn(x, y);
@@ -131,6 +118,65 @@ public class Board {
         return linkedList;
     }
 
+    void writeHorizontalIndexRow(StringBuilder sb) {
+        sb.append(" |");
+        for (int i = 0; i < N; i++) {
+            sb.append((char) ('A' + i)).append("|");
+        }
+        sb.append(" \n");
+    }
+
+    void writeBorderRow(StringBuilder sb) {
+        sb.append("=|");
+        for (int i = 0; i < N; i++) {
+            sb.append("=").append("|");
+        }
+        sb.append("=\n");
+    }
+
+    //rowIndex is zero based
+    void writeRow(StringBuilder sb, int rowIndex) {
+        int rowNum = Util.invertRowNum(N, rowIndex + 1);
+        sb.append(rowNum).append("|");
+
+        for (Player p : getFieldOwnerList(rowIndex)) {
+            sb.append(p).append("|");
+        }
+        sb.append(rowNum).append("\n");
+    }
+
+    //From left to right, ofRow is zero based
+    List<Player> getFieldOwnerList(int ofRow) {
+        if (ofRow >= N) {
+            throw new IndexOutOfBoundsException();
+        }
+        ArrayList<Player> fieldOwners = new ArrayList<>(N);
+        for (int i = ofRow * N, end = ofRow * N + N; i < end; i++) {
+            Field f = board[i];
+            if (f == null) {
+                fieldOwners.add(Player.NULL_PLAYER);
+            } else {
+                fieldOwners.add(f.playerOwner);
+            }
+        }
+        return fieldOwners;
+    }
+
+    public String toString() {
+        int oneRowSigns = 3 + 2 * N;
+        StringBuilder sb = new StringBuilder(oneRowSigns * oneRowSigns + N); // adding N for a column of '\n'
+
+        writeHorizontalIndexRow(sb);//top row
+        writeBorderRow(sb);
+        for (int i = 0; i < N; i++) {
+            writeRow(sb, i);
+            writeBorderRow(sb);
+        }
+        writeHorizontalIndexRow(sb);//bottom row
+
+        return sb.toString();
+    }
+
     private void ifOwnerIsSameAddToList(Field field, Field adjacent, Direction direction, LinkedList<AdjacentField> list) {
         if (adjacent != null && field.isOwnerTheSame(adjacent)) {
             list.add(new AdjacentField(adjacent, direction));
@@ -147,25 +193,4 @@ public class Board {
         }
     }
 
-    private StringBuilder sb = new StringBuilder();
-
-    public void writeHorizontalIndexRow() {
-        sb.append(" |");
-        for (int i = 0; i < N; i++) {
-            sb.append((char) ('A' + i)).append("|");
-        }
-        sb.append(" \n");
-    }
-
-    public void writeBorderRow() {
-        sb.append("#|");
-        for (int i = 0; i < N; i++) {
-            sb.append("=").append("|");
-        }
-        sb.append("#\n");
-    }
-
-    public String toString() {
-        return sb.toString();
-    }
 }

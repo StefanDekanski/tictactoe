@@ -18,7 +18,7 @@ public class PlayerTest {
         String name = "x";
         Player player = new Player(name);
 
-        String upperCase = player.getName();
+        String upperCase = player.toString();
         assertThat(name.toUpperCase().equals(upperCase), is(true));
     }
 }

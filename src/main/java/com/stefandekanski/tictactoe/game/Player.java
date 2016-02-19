@@ -22,10 +22,6 @@ public class Player {
         name = letter.toUpperCase();
     }
 
-    public String getName() {
-        return name;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -41,4 +37,7 @@ public class Player {
         return name.hashCode();
     }
 
+    public String toString() {
+        return name;
+    }
 }

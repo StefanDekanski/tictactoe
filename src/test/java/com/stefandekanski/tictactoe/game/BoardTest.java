@@ -96,7 +96,7 @@ public class BoardTest {
     }
 
     @Test
-    public void getAdjacentFields2() throws Board.IllegalMove {
+    public void adjecentFieldsFieldOwnerListRowToString() throws Board.IllegalMove {
         Field one = board.openField(1, 1, PLAYER_ONE);
         Field two = board.openField(3, 1, PLAYER_ONE);
         Field three = board.openField(1, 2, PLAYER_ONE);
@@ -116,33 +116,100 @@ public class BoardTest {
                         new AdjacentField(two, Direction.OTHER_DIAGONAL),
                         new AdjacentField(three, Direction.HORIZONTAL),
                         new AdjacentField(four, Direction.VERTICAL)));
+    }
 
-        List<Player> fieldOwnerList = board.getFieldOwnerList();
+    @Test
+    public void fieldOwnerListTest() throws Board.IllegalMove {
+        simpleFieldSetup();
+        List<Player> fieldOwnerList = board.getFieldOwnerList(0);
         assertThat(fieldOwnerList.get(0), is(PLAYER_ONE));
-        assertThat(fieldOwnerList.get(2), is(PLAYER_ONE));
-        assertThat(fieldOwnerList.get(3), is(PLAYER_ONE));
-        assertThat(fieldOwnerList.get(7), is(PLAYER_ONE));
-        assertThat(fieldOwnerList.get(4), is(PLAYER_ONE));
-
         assertThat(fieldOwnerList.get(1), is(PLAYER_TWO));
-        assertThat(fieldOwnerList.get(5), is(PLAYER_TWO));
-        assertThat(fieldOwnerList.get(6), is(PLAYER_TWO));
+        assertThat(fieldOwnerList.get(2), is(PLAYER_ONE));
 
-        assertThat(fieldOwnerList.get(8),is(Player.NULL_PLAYER));
+        fieldOwnerList = board.getFieldOwnerList(1);
+        assertThat(fieldOwnerList.get(0), is(PLAYER_ONE));
+        assertThat(fieldOwnerList.get(1), is(PLAYER_ONE));
+        assertThat(fieldOwnerList.get(2), is(PLAYER_TWO));
+
+        fieldOwnerList = board.getFieldOwnerList(2);
+        assertThat(fieldOwnerList.get(0), is(PLAYER_TWO));
+        assertThat(fieldOwnerList.get(1), is(PLAYER_ONE));
+        assertThat(fieldOwnerList.get(2), is(Player.NULL_PLAYER));
     }
 
     @Test
     public void writeTopRow() {
+        StringBuilder sb = new StringBuilder();
+
         String expected = " |A|B|C| \n";
-        board.writeHorizontalIndexRow();
-        assertThat(board.toString(), is(expected));
+        board.writeHorizontalIndexRow(sb);
+
+        assertThat(sb.toString(), is(expected));
     }
 
     @Test
     public void writeBorderRow() {
-        String expected = "#|=|=|=|#\n";
-        board.writeBorderRow();
-        assertThat(board.toString(), is(expected));
+        StringBuilder sb = new StringBuilder();
+
+        String expected = "=|=|=|=|=\n";
+        board.writeBorderRow(sb);
+
+        assertThat(sb.toString(), is(expected));
     }
 
+
+    @Test
+    public void writeRowTest0() throws Board.IllegalMove {
+        simpleFieldSetup();
+        StringBuilder sb = new StringBuilder();
+
+        String expected = "3|" + PLAYER_ONE + "|" + PLAYER_TWO + "|" + PLAYER_ONE + "|3\n";
+        board.writeRow(sb, 0);
+
+        assertThat(sb.toString(), is(expected));
+    }
+
+    @Test
+    public void writeRowTest1() throws Board.IllegalMove {
+        simpleFieldSetup();
+        StringBuilder sb = new StringBuilder();
+
+        String expected = "2|" + PLAYER_ONE + "|" + PLAYER_ONE + "|" + PLAYER_TWO + "|2\n";
+        board.writeRow(sb, 1);
+
+        assertThat(sb.toString(), is(expected));
+    }
+
+    @Test
+    public void writeRowTest2() throws Board.IllegalMove {
+        simpleFieldSetup();
+        StringBuilder sb = new StringBuilder();
+
+        String expected = "1|" + PLAYER_TWO + "|" + PLAYER_ONE + "|" + Player.NULL_PLAYER + "|1\n";
+        board.writeRow(sb, 2);
+
+        assertThat(sb.toString(), is(expected));
+    }
+
+    @Test
+    public void toStringPlayGround() throws Board.IllegalMove {
+        simpleFieldSetup();
+
+        System.out.println(board.toString());
+    }
+
+
+    private void simpleFieldSetup() throws Board.IllegalMove {
+        board.openField(1, 1, PLAYER_ONE);
+        board.openField(2, 1, PLAYER_TWO);
+        board.openField(3, 1, PLAYER_ONE);
+
+        board.openField(1, 2, PLAYER_ONE);
+        board.openField(2, 2, PLAYER_ONE);
+        board.openField(3, 2, PLAYER_TWO);
+
+        board.openField(1, 3, PLAYER_TWO);
+        board.openField(2, 3, PLAYER_ONE);
+        //field 3,3 is NULL_PLAYER
+    }
 }

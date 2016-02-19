@@ -1,7 +1,6 @@
-package com.stefandekanski.tictactoe.move;
+package com.stefandekanski.tictactoe.game;
 
 public class Move {
-
     public final int x;
     public final int y;
 

@@ -3,8 +3,8 @@ package com.stefandekanski.tictactoe.runner;
 
 import com.stefandekanski.tictactoe.game.Board;
 import com.stefandekanski.tictactoe.game.Game;
+import com.stefandekanski.tictactoe.game.Move;
 import com.stefandekanski.tictactoe.game.Player;
-import com.stefandekanski.tictactoe.move.Move;
 
 import java.util.Arrays;
 import java.util.LinkedHashSet;
@@ -18,6 +18,7 @@ public class GameRunner {
         this.game = game;
         this.gameRunnerIO = gameRunnerIO;
     }
+
     public void runGame() {
         try {
             boolean gameOver = false;
@@ -38,12 +39,14 @@ public class GameRunner {
     }
 
     private boolean nextValidMove(Player player) throws Game.GameTerminatedException {
+        boolean silent = false;
         while (true) {
             try {
-                Move move = gameRunnerIO.getPlayerMove(player);
+                Move move = gameRunnerIO.getPlayerMove(player, silent);
                 return game.playerMove(move.x, move.y, player);
             } catch (Board.IllegalMove illegalMove) {
                 gameRunnerIO.illegalMoveTryAgain(illegalMove.getMessage());
+                silent = true;
             }
         }
     }
@@ -60,6 +63,10 @@ public class GameRunner {
 
         Game game = new Game(winningLineLen, gameBoard, players);
         GameRunnerIO gameRunnerIO = new ConsoleGameRunnerIO(boardDimension);
+
+        System.out.println("The game is configurable. The hardcoded values are 4 in line (all directions) for win, 3 players ('X','O','Y'), and board 8x8.");
+        System.out.println("Have fun!");
+        System.out.println();
 
         new GameRunner(game, gameRunnerIO).runGame();
 
