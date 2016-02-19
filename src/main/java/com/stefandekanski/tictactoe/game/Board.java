@@ -4,6 +4,7 @@ import com.stefandekanski.tictactoe.field.AdjacentField;
 import com.stefandekanski.tictactoe.field.Direction;
 import com.stefandekanski.tictactoe.field.Field;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -27,17 +28,36 @@ public class Board {
         board = new Field[fieldsLeft];
     }
 
-    public Field getField(int x, int y) {
+    boolean hasFieldsLeft() {
+        return fieldsLeft > 0;
+    }
+
+    /*
+      From left to right, from top to bottom
+     */
+    public List<Player> getFieldOwnerList() {
+        ArrayList<Player> fieldOwners = new ArrayList<>(board.length);
+        for (Field f : board) {
+            if (f == null) {
+                fieldOwners.add(Player.NULL_PLAYER);
+            } else {
+                fieldOwners.add(f.playerOwner);
+            }
+        }
+        return fieldOwners;
+    }
+
+    Field getField(int x, int y) {
         validRowAndColumn(x, y);
         return board[fieldIndex(x, y)];
     }
 
-    public boolean isFieldOpen(int x, int y) {
+    boolean isFieldOpen(int x, int y) {
         validRowAndColumn(x, y);
         return board[fieldIndex(x, y)] != null;
     }
 
-    public Field openField(int x, int y, Player player) throws IllegalMove {
+    Field openField(int x, int y, Player player) throws IllegalMove {
         if (isFieldOpen(x, y)) {
             throw new IllegalMove("Can't open already open field!");
         }
@@ -47,7 +67,7 @@ public class Board {
         return field;
     }
 
-    public List<AdjacentField> getAdjacentFieldsOf(Field field) {
+    List<AdjacentField> getAdjacentFieldsOf(Field field) {
         LinkedList<AdjacentField> linkedList = new LinkedList<>();
         int x = field.x;
         int y = field.y;
@@ -118,16 +138,12 @@ public class Board {
     }
 
     private int fieldIndex(int x, int y) {
-        return (x - 1) * N + y - 1;
+        return N * (y - 1) + x - 1;
     }
 
     private void validRowAndColumn(int x, int y) {
         if (x < 1 || x > N || y < 1 || y > N) {
             throw new IllegalStateException("Can't choose field that is out of board!");
         }
-    }
-
-    public boolean hasFieldsLeft() {
-        return fieldsLeft > 0;
     }
 }

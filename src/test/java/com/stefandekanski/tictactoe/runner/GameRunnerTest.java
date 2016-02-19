@@ -4,6 +4,7 @@ package com.stefandekanski.tictactoe.runner;
 import com.stefandekanski.tictactoe.game.Board;
 import com.stefandekanski.tictactoe.game.Game;
 import com.stefandekanski.tictactoe.game.Player;
+import com.stefandekanski.tictactoe.move.Move;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -24,7 +25,7 @@ public class GameRunnerTest {
 
     Game game;
 
-    GameSimulationDevice inputDevice;
+    GameSimulationDevice gameIODevice;
 
     GameRunner gameRunner;
 
@@ -34,36 +35,34 @@ public class GameRunnerTest {
         PLAYER_TWO = new Player("O");
         playerNames = new LinkedHashSet<>(Arrays.asList(PLAYER_ONE, PLAYER_TWO));
         game = new Game(winningScore, board, playerNames);
-        inputDevice = new GameSimulationDevice();
-        gameRunner = new GameRunner(game, inputDevice);
+        gameIODevice = new GameSimulationDevice();
+        gameRunner = new GameRunner(game, gameIODevice);
     }
 
     @Test
     public void runGameSimulation() {
         List<Move> simulated = getSimulatedPlayerOneWin();
-        inputDevice.setSimulatedMoves(simulated.iterator());
+        gameIODevice.setSimulatedMoves(simulated.iterator());
         gameRunner.runGame();
 
-        assertThat(gameRunner.hasWinner(), is(true));
-        assertThat(gameRunner.gameWinner(), is(PLAYER_ONE));
-        assertThat(inputDevice.currentGameBoardCalls, is(simulated.size() + 1));
-        assertThat(inputDevice.gameDrawCalls, is(0));
-        assertThat(inputDevice.gameWinnerCalls, is(1));
-        assertThat(inputDevice.gameTerminatedCalls, is(0));
+        assertThat(gameIODevice.winner, is(PLAYER_ONE));
+        assertThat(gameIODevice.currentGameBoardCalls, is(simulated.size() + 1));
+        assertThat(gameIODevice.gameDrawCalls, is(0));
+        assertThat(gameIODevice.gameWinnerCalls, is(1));
+        assertThat(gameIODevice.gameTerminatedCalls, is(0));
     }
 
     @Test
     public void runGameSimulationDrawGame() {
         List<Move> simulated = getSimulatedDrawGame();
-        inputDevice.setSimulatedMoves(simulated.iterator());
+        gameIODevice.setSimulatedMoves(simulated.iterator());
         gameRunner.runGame();
 
-        assertThat(gameRunner.hasWinner(), is(false));
-        assertThat(gameRunner.gameWinner(), is(nullValue()));
-        assertThat(inputDevice.currentGameBoardCalls, is(simulated.size() + 1));
-        assertThat(inputDevice.gameDrawCalls, is(1));
-        assertThat(inputDevice.gameWinnerCalls, is(0));
-        assertThat(inputDevice.gameTerminatedCalls, is(0));
+        assertThat(gameIODevice.winner, is(nullValue()));
+        assertThat(gameIODevice.currentGameBoardCalls, is(simulated.size() + 1));
+        assertThat(gameIODevice.gameDrawCalls, is(1));
+        assertThat(gameIODevice.gameWinnerCalls, is(0));
+        assertThat(gameIODevice.gameTerminatedCalls, is(0));
     }
 
 
@@ -76,6 +75,8 @@ public class GameRunnerTest {
         int gameWinnerCalls = 0;
         int gameTerminatedCalls = 0;
         int illegalMoveTryAgainCalls = 0;
+
+        Player winner;
 
         public void setSimulatedMoves(Iterator<Move> moves) {
             simulatedMoves = moves;
@@ -99,6 +100,7 @@ public class GameRunnerTest {
         @Override
         public void gameWinner(Player winner) {
             gameWinnerCalls++;
+            this.winner = winner;
         }
 
         @Override

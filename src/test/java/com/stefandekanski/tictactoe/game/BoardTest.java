@@ -3,8 +3,6 @@ package com.stefandekanski.tictactoe.game;
 import com.stefandekanski.tictactoe.field.AdjacentField;
 import com.stefandekanski.tictactoe.field.Direction;
 import com.stefandekanski.tictactoe.field.Field;
-import com.stefandekanski.tictactoe.game.Board;
-import com.stefandekanski.tictactoe.game.Player;
 import org.hamcrest.CoreMatchers;
 import org.junit.Before;
 import org.junit.Test;
@@ -118,6 +116,19 @@ public class BoardTest {
                         new AdjacentField(two, Direction.OTHER_DIAGONAL),
                         new AdjacentField(three, Direction.HORIZONTAL),
                         new AdjacentField(four, Direction.VERTICAL)));
+
+        List<Player> fieldOwnerList = board.getFieldOwnerList();
+        assertThat(fieldOwnerList.get(0), is(PLAYER_ONE));
+        assertThat(fieldOwnerList.get(2), is(PLAYER_ONE));
+        assertThat(fieldOwnerList.get(3), is(PLAYER_ONE));
+        assertThat(fieldOwnerList.get(7), is(PLAYER_ONE));
+        assertThat(fieldOwnerList.get(4), is(PLAYER_ONE));
+
+        assertThat(fieldOwnerList.get(1), is(PLAYER_TWO));
+        assertThat(fieldOwnerList.get(5), is(PLAYER_TWO));
+        assertThat(fieldOwnerList.get(6), is(PLAYER_TWO));
+
+        assertThat(fieldOwnerList.get(8),is(Player.NULL_PLAYER));
     }
 
 }

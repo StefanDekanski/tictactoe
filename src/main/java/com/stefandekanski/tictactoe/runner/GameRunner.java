@@ -4,6 +4,10 @@ package com.stefandekanski.tictactoe.runner;
 import com.stefandekanski.tictactoe.game.Board;
 import com.stefandekanski.tictactoe.game.Game;
 import com.stefandekanski.tictactoe.game.Player;
+import com.stefandekanski.tictactoe.move.Move;
+
+import java.util.Arrays;
+import java.util.LinkedHashSet;
 
 public class GameRunner {
 
@@ -14,7 +18,6 @@ public class GameRunner {
         this.game = game;
         this.gameRunnerIO = gameRunnerIO;
     }
-
     public void runGame() {
         try {
             boolean gameOver = false;
@@ -22,7 +25,6 @@ public class GameRunner {
             while (!gameOver) {
                 Player currPlayer = game.nextPlayer();
                 gameOver = nextValidMove(currPlayer);
-                //draw board after each move
                 gameRunnerIO.currentGameBoard(game.gameBoard());
             }
             if (game.getWinner() != null) {
@@ -33,7 +35,6 @@ public class GameRunner {
         } catch (Game.GameTerminatedException e) {
             gameRunnerIO.gameTerminated(e.getMessage());
         }
-
     }
 
     private boolean nextValidMove(Player player) throws Game.GameTerminatedException {
@@ -47,12 +48,27 @@ public class GameRunner {
         }
     }
 
-    public boolean hasWinner() {
-        return game.getWinner() != null;
-    }
+    public static void main(String[] args) throws Player.IllegalNameException {
+        int winningLineLen = 4;
+        int boardDimension = 8;
+        Board gameBoard = new Board(boardDimension);
 
-    public Player gameWinner() {
-        return game.getWinner();
+        Player playerOne = new Player("X");
+        Player playerTwo = new Player("O");
+        Player playerThree = new Player("Y");
+        LinkedHashSet<Player> players = new LinkedHashSet<>(Arrays.asList(playerOne, playerTwo, playerThree));
+
+        Game game = new Game(winningLineLen, gameBoard, players);
+        GameRunnerIO gameRunnerIO = new ConsoleGameRunnerIO(boardDimension);
+
+        new GameRunner(game, gameRunnerIO).runGame();
+
+        //sleep a little before exit, so message can be read
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
 }

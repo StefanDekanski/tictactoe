@@ -1,6 +1,8 @@
 package com.stefandekanski.tictactoe.game;
 
 public class Player {
+    public static final Player NULL_PLAYER = new Player();
+
     public static class IllegalNameException extends Exception {
         public IllegalNameException(String msg) {
             super(msg);
@@ -8,6 +10,10 @@ public class Player {
     }
 
     private final String name;
+
+    private Player() {
+        name = " ";
+    }
 
     public Player(String letter) throws IllegalNameException {
         if (letter == null || letter.length() != 1) {
