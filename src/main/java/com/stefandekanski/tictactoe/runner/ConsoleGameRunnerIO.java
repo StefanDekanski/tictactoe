@@ -6,7 +6,6 @@ import com.stefandekanski.tictactoe.game.Player;
 import com.stefandekanski.tictactoe.move.Move;
 import com.stefandekanski.tictactoe.move.MoveTranslator;
 
-import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
@@ -17,8 +16,6 @@ public class ConsoleGameRunnerIO implements GameRunnerIO {
     private final Pattern commandPattern;
     private final MoveTranslator moveTranslator;
 
-    private final int rowLength;
-
     public ConsoleGameRunnerIO(int N) {
         scanner = new Scanner(System.in);
 
@@ -28,7 +25,6 @@ public class ConsoleGameRunnerIO implements GameRunnerIO {
 
         commandPattern = Pattern.compile(pattern);
         moveTranslator = new MoveTranslator(N);
-        rowLength = N;
     }
 
     @Override
@@ -37,30 +33,9 @@ public class ConsoleGameRunnerIO implements GameRunnerIO {
         return nextCorrectMove();
     }
 
-    private Move nextCorrectMove() throws Game.GameTerminatedException {
-        while (true) {
-            String command = scanner.nextLine();
-            checkForExitCommand(command);
-            if (commandPattern.matcher(command).matches()) {
-                char column = command.charAt(0);
-                int row = Integer.parseInt(String.valueOf(command.charAt(1)));
-                return moveTranslator.translateToMove(column, row);
-            } else {
-                System.out.println("Invalid command, valid format is columnLetterRowNumber (for example 'A1'). You can always exit app by typing exit");
-            }
-        }
-    }
-
-    private void checkForExitCommand(String command) throws Game.GameTerminatedException {
-        if (EXIT_COMMAND.equals(command)) {
-            throw new Game.GameTerminatedException("User requested exit");
-        }
-    }
-
     @Override
     public void currentGameBoard(Board gameBoard) {
-        List<Player> fieldOwners = gameBoard.getFieldOwnerList();
-
+        System.out.println(gameBoard.toString());
     }
 
     @Override
@@ -81,6 +56,27 @@ public class ConsoleGameRunnerIO implements GameRunnerIO {
     @Override
     public void illegalMoveTryAgain(String moveDetails) {
         System.out.println("The move was illegal : " + moveDetails + ", please try again");
+    }
+
+    private Move nextCorrectMove() throws Game.GameTerminatedException {
+        while (true) {
+            String command = scanner.nextLine();
+            checkForExitCommand(command);
+            if (commandPattern.matcher(command).matches()) {
+                char column = command.charAt(0);
+                int row = Integer.parseInt(String.valueOf(command.charAt(1)));
+                return moveTranslator.translateToMove(column, row);
+            } else {
+                System.out.println("Invalid command, valid format is columnLetterRowNumber (for example 'A1'). " +
+                        "You can always exit app by typing exit");
+            }
+        }
+    }
+
+    private void checkForExitCommand(String command) throws Game.GameTerminatedException {
+        if (EXIT_COMMAND.equals(command)) {
+            throw new Game.GameTerminatedException("User requested exit");
+        }
     }
 
 }

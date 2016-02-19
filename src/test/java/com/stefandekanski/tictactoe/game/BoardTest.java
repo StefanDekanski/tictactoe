@@ -131,4 +131,18 @@ public class BoardTest {
         assertThat(fieldOwnerList.get(8),is(Player.NULL_PLAYER));
     }
 
+    @Test
+    public void writeTopRow() {
+        String expected = " |A|B|C| \n";
+        board.writeHorizontalIndexRow();
+        assertThat(board.toString(), is(expected));
+    }
+
+    @Test
+    public void writeBorderRow() {
+        String expected = "#|=|=|=|#\n";
+        board.writeBorderRow();
+        assertThat(board.toString(), is(expected));
+    }
+
 }

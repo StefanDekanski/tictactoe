@@ -146,4 +146,26 @@ public class Board {
             throw new IllegalStateException("Can't choose field that is out of board!");
         }
     }
+
+    private StringBuilder sb = new StringBuilder();
+
+    public void writeHorizontalIndexRow() {
+        sb.append(" |");
+        for (int i = 0; i < N; i++) {
+            sb.append((char) ('A' + i)).append("|");
+        }
+        sb.append(" \n");
+    }
+
+    public void writeBorderRow() {
+        sb.append("#|");
+        for (int i = 0; i < N; i++) {
+            sb.append("=").append("|");
+        }
+        sb.append("#\n");
+    }
+
+    public String toString() {
+        return sb.toString();
+    }
 }
