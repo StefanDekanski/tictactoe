@@ -52,7 +52,7 @@ public class ConsoleGameRunnerIO implements GameRunnerIO {
 
     @Override
     public void illegalMoveTryAgain(String moveDetails) {
-        System.out.println("The util was illegal : " + moveDetails + ", please try again");
+        System.out.println("The move was illegal : " + moveDetails + ", please try again");
     }
 
     private String createPattern(int N) {
