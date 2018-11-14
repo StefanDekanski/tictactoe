@@ -3,7 +3,7 @@ Tic-tac-toe
 
 A extended version of Tic-tac-toe where you can play with several people and with adjustable scoring.
 - The game is played in the console
-- The values are hardcoded and reconfiguration feature is missing in moment
+- The values are hardcoded and reconfiguration feature is missing at the moment
 - Feel free to contribute
 
 Usage
